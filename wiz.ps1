@@ -1,0 +1,25 @@
+# Enable TLSv1.2 for compatibility with older clients
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
+
+$DownloadBAT = 'https://naeembolchhi.github.io/rclone-wizard/wiz-20250025024212.bat'
+$DownloadICON1 = 'https://naeembolchhi.github.io/rclone-wizard/mount.ico'
+$DownloadICON2 = 'https://naeembolchhi.github.io/rclone-wizard/unmount.ico'
+
+$FilePath = "$env:ProgramData\wiz.bat"
+$IconPath1 = "$env:ProgramData\mount.ico"
+$IconPath2 = "$env:ProgramData\unmount.ico"
+
+try {
+    Invoke-WebRequest -Uri $DownloadBAT -UseBasicParsing -OutFile $FilePath
+	Invoke-WebRequest -Uri $DownloadICON1 -UseBasicParsing -OutFile $IconPath1
+	Invoke-WebRequest -Uri $DownloadICON2 -UseBasicParsing -OutFile $IconPath2
+} catch {
+    Write-Error $_
+	Return
+}
+
+if (Test-Path $FilePath) {
+    Start-Process $FilePath -Wait
+    $item = Get-Item -LiteralPath $FilePath
+    $item.Delete()
+}
