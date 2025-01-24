@@ -5,9 +5,14 @@ $DownloadBAT = 'https://naeembolchhi.github.io/rclone-wizard/wiz-20250025024212.
 $DownloadICON1 = 'https://naeembolchhi.github.io/rclone-wizard/mount.ico'
 $DownloadICON2 = 'https://naeembolchhi.github.io/rclone-wizard/unmount.ico'
 
-$FilePath = "$env:ProgramData\wiz.bat"
-$IconPath1 = "$env:ProgramData\mount.ico"
-$IconPath2 = "$env:ProgramData\unmount.ico"
+$folderPath = "$env:ProgramData\TmFlZW1Cb2xjaGhp"
+if (-not (Test-Path -Path $folderPath)) {
+    New-Item -Path $folderPath -ItemType Directory
+}
+
+$FilePath = "$folderPath\wiz.bat"
+$IconPath1 = "$folderPath\mount.ico"
+$IconPath2 = "$folderPath\unmount.ico"
 
 try {
     Invoke-WebRequest -Uri $DownloadBAT -UseBasicParsing -OutFile $FilePath
@@ -20,6 +25,6 @@ try {
 
 if (Test-Path $FilePath) {
     Start-Process $FilePath -Wait
-    $item = Get-Item -LiteralPath $FilePath
-    $item.Delete()
+    # $item = Get-Item -LiteralPath $FilePath
+    # $item.Delete()
 }
