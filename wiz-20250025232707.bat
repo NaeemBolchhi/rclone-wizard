@@ -61,8 +61,9 @@ set "_smprograms=%programdata%\Microsoft\Windows\Start Menu\Programs"
 set "_smstartup=%programdata%\Microsoft\Windows\Start Menu\Programs\Startup"
 call :INIT_FOLDER
 
+cd "%_folder%"
+
 :MAIN
-call :COPY_PUBLIC
 title %_title%
 cls
 echo:
@@ -116,7 +117,6 @@ if %_choice% EQU 1 (
 )
 
 :INSTALL
-call :COPY_PUBLIC
 title Install Programs - %_title%
 cls
 echo:
@@ -200,7 +200,6 @@ if %_choice% EQU 1 (
 )
 
 :CONFIG
-call :COPY_PUBLIC
 title Configure Rclone - %_title%
 cls
 echo:
@@ -216,13 +215,13 @@ echo:Create Remotes for your cloud accounts.
 powershell Write-Host "Take note of the remote names." -f yellow
 echo:
 echo:
-rclone config
+echo:Opening config window...
+runas /user:%username% "cmd /k rclone config"
 echo:
-timeout 9
+timeout 19
 goto MAIN
 
 :CREATE_MOUNTS
-call :COPY_PUBLIC
 title Create Mounts - %_title%
 cls
 echo:
@@ -352,7 +351,6 @@ if %_choice% EQU 1 (
 )
 
 :MOUNT_STARTUP
-call :COPY_PUBLIC
 title ^Mount Startup - %_title%
 cls
 echo:
@@ -407,7 +405,6 @@ if %_choice% EQU 1 (
 )
 
 :HELP
-call :COPY_PUBLIC
 title Help - %_title%
 cls
 echo:
@@ -479,24 +476,14 @@ exit /b
 
 :VALID
 set "_invalid=0"
-call :COPY_PUBLIC
 exit /b
 
 :INVALID
 set "_invalid=1"
-call :COPY_PUBLIC
-exit /b
-
-:COPY_PUBLIC
-copy "%_folder%\mount_drives.bat" "%_folder%\dup\mount_drives.bat" /y
-copy "%_folder%\mount_drives.vbs" "%_folder%\dup\mount_drives.vbs" /y
-copy "%_folder%\unmount_drives.bat" "%_folder%\dup\unmount_drives.bat" /y
-copy "%_folder%\unmount_drives.vbs" "%_folder%\dup\unmount_drives.vbs" /y
 exit /b
 
 :INIT_FOLDER
 if not exist "%_folder%" mkdir "%_folder%"
-if not exist "%_folder%\dup" mkdir "%_folder%\dup"
 if not exist "%_folder%\mount_drives.bat" (
     (
         echo:@echo off
@@ -506,14 +493,14 @@ if not exist "%_folder%\mount_drives.bat" (
         echo:  echo Try again after connecting to the internet.
         echo:  timeout 9
         echo:^) ^else ^(
-        echo:  cscript //nologo mount_drives.vbs
+        echo:  cscript //nologo "%_folder%\mount_drives.vbs"
         echo:^)
     ) > "%_folder%\mount_drives.bat"
 )
 if not exist "%_folder%\unmount_drives.bat" (
     (
         echo:@echo off
-        echo:cscript //nologo unmount_drives.vbs
+        echo:cscript //nologo "%_folder%\unmount_drives.vbs"
     ) > "%_folder%\unmount_drives.bat"
 )
 if not exist "%_folder%\mount_drives.vbs" (
@@ -532,21 +519,25 @@ if not exist "%_folder%\create_shortcuts.vbs" (
         echo:Set oWS = WScript.CreateObject^("WScript.Shell"^)
         echo:Set oMountLink = oWS.CreateShortcut^("%_folder%\Rclone Mount.lnk"^)
         echo:Set oUnmountLink = oWS.CreateShortcut^("%_folder%\Rclone Unmount.lnk"^)
+        echo:Set oWizLink = oWS.CreateShortcut^("%_folder%\Rclone Wizard.lnk"^)
         echo:
         echo:oMountLink.TargetPath = "%_folder%\mount_drives.bat"
         echo:oMountLink.IconLocation = "%_folder%\mount.ico" & ",0"
         echo:oUnmountLink.TargetPath = "%_folder%\unmount_drives.bat"
         echo:oUnmountLink.IconLocation = "%_folder%\unmount.ico" & ",0"
+        echo:oWizLink.TargetPath = "%_folder%\wiz.bat"
+        echo:oWizLink.IconLocation = "%_folder%\wiz.ico" & ",0"
         echo:
         echo:oMountLink.Save
         echo:oUnmountLink.Save
     ) > "%_folder%\create_shortcuts.vbs"
 )
 cscript //nologo "%_folder%\create_shortcuts.vbs"
-copy "%_folder%\Rclone Mount.lnk" "%_smprograms%\Rclone Mount.lnk" /y
-copy "%_folder%\Rclone Unmount.lnk" "%_smprograms%\Rclone Unmount.lnk" /y
+if not exist "%_smprograms%\Rclone Wizard" mkdir "%_smprograms%\Rclone Wizard"
+copy "%_folder%\Rclone Mount.lnk" "%_smprograms%\Rclone Wizard\Mount Rclone Drives.lnk" /y
+copy "%_folder%\Rclone Unmount.lnk" "%_smprograms%\Rclone Wizard\Unmount Rclone Drives.lnk" /y
+copy "%_folder%\Rclone Wizard.lnk" "%_smprograms%\Rclone Wizard\Start Rclone Wizard.lnk" /y
 exit /b
 
 :QUIT
-call :COPY_PUBLIC
 exit /b
