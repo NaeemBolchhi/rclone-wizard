@@ -530,6 +530,7 @@ if not exist "%_folder%\create_shortcuts.vbs" (
         echo:
         echo:oMountLink.Save
         echo:oUnmountLink.Save
+        echo:oWizLink.Save
     ) > "%_folder%\create_shortcuts.vbs"
 )
 cscript //nologo "%_folder%\create_shortcuts.vbs"
