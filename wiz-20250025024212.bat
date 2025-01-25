@@ -488,15 +488,15 @@ call :COPY_PUBLIC
 exit /b
 
 :COPY_PUBLIC
-copy "%_folder%\mount_drives.bat" "%_folder%\public\mount_drives.bat" /y
-copy "%_folder%\mount_drives.vbs" "%_folder%\public\mount_drives.vbs" /y
-copy "%_folder%\unmount_drives.bat" "%_folder%\public\unmount_drives.bat" /y
-copy "%_folder%\unmount_drives.vbs" "%_folder%\public\unmount_drives.vbs" /y
+copy "%_folder%\mount_drives.bat" "%_folder%\dup\mount_drives.bat" /y
+copy "%_folder%\mount_drives.vbs" "%_folder%\dup\mount_drives.vbs" /y
+copy "%_folder%\unmount_drives.bat" "%_folder%\dup\unmount_drives.bat" /y
+copy "%_folder%\unmount_drives.vbs" "%_folder%\dup\unmount_drives.vbs" /y
 exit /b
 
 :INIT_FOLDER
 if not exist "%_folder%" mkdir "%_folder%"
-if not exist "%_folder%\public" mkdir "%_folder%\public"
+if not exist "%_folder%\dup" mkdir "%_folder%\dup"
 if not exist "%_folder%\mount_drives.bat" (
     (
         echo:@echo off
@@ -533,9 +533,9 @@ if not exist "%_folder%\create_shortcuts.vbs" (
         echo:Set oMountLink = oWS.CreateShortcut^("%_folder%\Rclone Mount.lnk"^)
         echo:Set oUnmountLink = oWS.CreateShortcut^("%_folder%\Rclone Unmount.lnk"^)
         echo:
-        echo:oMountLink.TargetPath = "%_folder%\public\mount_drives.bat"
+        echo:oMountLink.TargetPath = "%_folder%\mount_drives.bat"
         echo:oMountLink.IconLocation = "%_folder%\mount.ico" & ",0"
-        echo:oUnmountLink.TargetPath = "%_folder%\public\unmount_drives.bat"
+        echo:oUnmountLink.TargetPath = "%_folder%\unmount_drives.bat"
         echo:oUnmountLink.IconLocation = "%_folder%\unmount.ico" & ",0"
         echo:
         echo:oMountLink.Save
