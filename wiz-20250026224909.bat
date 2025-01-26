@@ -216,9 +216,9 @@ powershell Write-Host "Take note of the remote names." -f yellow
 echo:
 echo:
 echo:Opening config window...
-runas /user:%username% "cmd /k rclone config"
+powershell Start-Process "cmd" -verb runas -ArgumentList {/c rclone config}
 echo:
-timeout 19
+timeout 5
 goto MAIN
 
 :CREATE_MOUNTS
@@ -483,14 +483,14 @@ set "_invalid=1"
 exit /b
 
 :INIT_FOLDER
-if not exist "%_folder%" mkdir "%_folder%"
 if not exist "%_folder%\mount_drives.bat" (
     (
         echo:@echo off
         echo:ping 8.8.8.8 -n 1 ^| ^findstr "Reply" ^> ^n^u^l
         echo:if errorlevel 1 ^(
-        echo:  echo Internet connection not available.
-        echo:  echo Try again after connecting to the internet.
+        echo:  echo Internet connection not detected.
+        echo:  echo Mounting may not work properly. Attempting anyway.
+        echo:  cscript //nologo "%_folder%\mount_drives.vbs"
         echo:  timeout 9
         echo:^) ^else ^(
         echo:  cscript //nologo "%_folder%\mount_drives.vbs"

@@ -1,7 +1,7 @@
 # Enable TLSv1.2 for compatibility with older clients
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
 
-$DownloadBAT = 'https://naeembolchhi.github.io/rclone-wizard/wiz-20250025233256.bat'
+$DownloadBAT = 'https://naeembolchhi.github.io/rclone-wizard/wiz-20250026224909.bat'
 $DownloadICON1 = 'https://naeembolchhi.github.io/rclone-wizard/mount.ico'
 $DownloadICON2 = 'https://naeembolchhi.github.io/rclone-wizard/unmount.ico'
 $DownloadICON3 = 'https://naeembolchhi.github.io/rclone-wizard/wiz.ico'
