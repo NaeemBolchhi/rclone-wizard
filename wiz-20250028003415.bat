@@ -216,9 +216,9 @@ powershell Write-Host "Take note of the remote names." -f yellow
 echo:
 echo:
 echo:Opening config window...
-powershell Start-Process "cmd" -verb runas -ArgumentList {/c rclone config}
+start cmd /c "rclone config"
 echo:
-timeout 5
+timeout 9
 goto MAIN
 
 :CREATE_MOUNTS
